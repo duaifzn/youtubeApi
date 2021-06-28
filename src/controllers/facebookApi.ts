@@ -93,11 +93,21 @@ export default class FacebookApi extends FacebookService{
                 return JSON.parse(data)
             })
            
-            let title = detail.articleBody?detail.articleBody:null
+            let titleOption = detail.articleBody || detail.description
+            let title = titleOption?titleOption:null
             let imgUrl = detail.image?detail.image.contentUrl:null
-            let likeCount = detail.interactionStatistic[1].userInteractionCount
-            let shareCount = detail.interactionStatistic[2].userInteractionCount
-            let commentCount = detail.interactionStatistic[0].userInteractionCount
+            let commentCount = detail.commentCount?detail.commentCount:null
+            let likeCount = null
+            let shareCount = null
+
+            detail.interactionStatistic.forEach((d, index) =>{
+                if(JSON.stringify(d).includes('Like')){
+                    likeCount = detail.interactionStatistic[index].userInteractionCount
+                }
+                if(JSON.stringify(d).includes('Share')){
+                    shareCount = detail.interactionStatistic[index].userInteractionCount
+                }
+            })
             
             //write data to db
             await super.createOrUpdateFacebookPost({
@@ -110,8 +120,59 @@ export default class FacebookApi extends FacebookService{
                 comment: commentCount,
             })
         }
+    }
+    async getPostComment(){
+        //get post ids
+        let facebookPostAndOwnerIds = await super.getFacebookPostAndOwnerIds()
+        for(let facebookPostAndOwnerId of facebookPostAndOwnerIds){
+            await this.page.goto(`https://m.facebook.com/story.php?story_fbid=${facebookPostAndOwnerId.postId}&id=${facebookPostAndOwnerId.ownerId}`)
+            //get comments
+            let comments = await this.page.evaluate(() =>{
+                let ans = []
+                let comments = document.querySelectorAll('div[data-sigil="comment"]')
+                comments.forEach(comment =>{
+                    ans.push({
+                        id: comment.id,
+                        content: comment.textContent
+                    })
+                })
+                return ans
+            })
+            
+            //write comment to db
+            for(let comment of comments){
+                await super.createOrUpdateFacebookComment({
+                    commentId: comment.id,
+                    postId: facebookPostAndOwnerId.postId,
+                    ownerId: facebookPostAndOwnerId.ownerId,
+                    content: comment.content
+                })
+            }
+            
+        }
         
-
+    }
+    async getProfileDetail(){
+        let facebookIds = await super.getFacebookIds()
+        for(let facebookId of facebookIds){
+            await this.page.goto(`https://m.facebook.com/${facebookId}`)
+            let name = await this.page.evaluate(() =>{
+                let name = document.querySelector('title').textContent
+                if(name.includes(' - 首頁')) {
+                    name = name.replace(' - 首頁', '')
+                }
+                return name
+            })
+            await super.createFacebookProfile({
+                profileId: facebookId,
+                name: name
+            })
+        }
+    }
+    async browserClose(){
+        await this.browser.close()
+        this.browser = null
+        this.page = null
     }
 }
 

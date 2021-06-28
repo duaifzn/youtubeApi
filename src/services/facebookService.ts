@@ -1,6 +1,8 @@
 import mongoose, { Model } from 'mongoose';
 import { facebookIdSchema, IFacebookId } from '../models/facebookId';
 import { facebookPostSchema, IFacebookPost } from '../models/facebookPost';
+import { facebookCommentSchema, IFacebookComment } from '../models/facebookComment';
+import { facebookProfileSchema, IFacebookProfile } from '../models/facebookProfile';
 import { Config } from '../config/config'
 const config = Config[process.env.NODE_ENV];
 const mongoUri = config.mongoUri;
@@ -8,10 +10,13 @@ const mongoUri = config.mongoUri;
 export default class FacebookService{
     FacebookId: Model<IFacebookId >;
     FacebookPost: Model<IFacebookPost>;
+    FacebookComment: Model<IFacebookComment>
+    FacebookProfile: Model<IFacebookProfile>
 
     constructor(){
         this.FacebookId = null
         this.FacebookPost = null
+        this.FacebookComment = null
         this.connectMongo()
     }
     connectMongo(){
@@ -28,6 +33,8 @@ export default class FacebookService{
             console.log('mongodb connect!')
             this.FacebookId = db.model<IFacebookId>('FacebookId', facebookIdSchema)
             this.FacebookPost = db.model<IFacebookPost>('FacebookPost', facebookPostSchema)
+            this.FacebookComment = db.model<IFacebookComment>('FacebookComment', facebookCommentSchema)
+            this.FacebookProfile = db.model<IFacebookProfile>('FacebookProfile', facebookProfileSchema)
         })
         db.on('error', () =>{
             console.log('mongodb error!!')
@@ -91,5 +98,54 @@ export default class FacebookService{
                 ownerId: d.ownerId
             }
         })
+    }
+
+    async createOrUpdateFacebookComment(comment: {
+        commentId: string
+        postId: string,
+        ownerId: string,
+        commenter?: string,
+        content?: string
+    }){
+        let data = await this.FacebookComment.findOne({
+            commentId: comment.commentId,
+            postId: comment.postId,
+            ownerId: comment.ownerId,
+        })
+        if(data){
+            data.commenter = comment.commenter?comment.commenter:data.commenter
+            data.content = comment.content?comment.content:data.content
+            await data.save()
+        }else{
+            await this.FacebookComment.create({
+                commentId: comment.commentId,
+                postId: comment.postId,
+                ownerId: comment.ownerId,
+                commenter: comment.commenter?comment.commenter:null,
+                content: comment.content?comment.content:null
+            })
+        }
+    }
+
+    async createFacebookProfile(profile:{
+        profileId: string
+        name: string
+        followerValue?: number
+        likeValue?: number
+    }){
+        let data = await this.FacebookProfile.findOne({profileId: profile.profileId})
+        if(data){
+            data.name = profile.name?profile.name:data.name
+            data.followerValue = profile.followerValue?profile.followerValue:data.followerValue
+            data.likeValue = profile.likeValue?profile.likeValue:data.likeValue
+            await data.save()
+        }else{
+            await this.FacebookProfile.create({
+                profileId: profile.profileId,
+                name: profile.name,
+                followerValue: profile.followerValue?profile.followerValue:null,
+                likeValue: profile.likeValue?profile.likeValue:null,
+            })
+        }
     }
 }

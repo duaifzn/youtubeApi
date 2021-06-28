@@ -1,7 +1,10 @@
 import { Schema, Document } from "mongoose";
 
 export interface IFacebookProfile extends Document {
-
+    profileId: string
+    name: string
+    followerValue: number
+    likeValue: number
 }
 
 export const facebookProfileSchema = new Schema({
@@ -12,9 +15,9 @@ export const facebookProfileSchema = new Schema({
         type: String, require: true
     },
     followerValue: {
-        type: Number
+        type: Number, require: false, default: null
     },
     likeValue: {
-        type: Number
+        type: Number, require: false, default: null
     }
 })
