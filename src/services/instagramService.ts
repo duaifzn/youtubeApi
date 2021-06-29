@@ -1,6 +1,7 @@
 import mongoose, { Model } from 'mongoose';
 import { instagramProfileSchema, IInstagramProfile } from '../models/instagramProfile';
 import { instagramUserNameSchema, IInstagramUserName } from '../models/instagramUserName'; 
+import { instagramPostSchema, IInstagramPost} from '../models/instagramPost';
 import { Config } from '../config/config';
 const config = Config[process.env.NODE_ENV];
 const mongoUri = config.mongoUri;
@@ -8,10 +9,12 @@ const mongoUri = config.mongoUri;
 export default class InstagramService{
     InstagramProfile: Model<IInstagramProfile>
     InstagramUserName: Model<IInstagramUserName>
+    InstagramPost: Model<IInstagramPost>
 
     constructor(){
         this.InstagramProfile = null
         this.InstagramUserName = null
+        this.InstagramPost = null
         this.connectMongo()
     }
     connectMongo(){
@@ -28,6 +31,7 @@ export default class InstagramService{
             console.log('mongodb connect!')
             this.InstagramProfile = db.model<IInstagramProfile>('InstagramProfile', instagramProfileSchema)
             this.InstagramUserName = db.model<IInstagramUserName>('InstagramUserName', instagramUserNameSchema)
+            this.InstagramPost = db.model<IInstagramPost>('InstagramPostSchema', instagramPostSchema)
         })
         db.on('error', () =>{
             console.log('mongodb error!!')
@@ -79,6 +83,39 @@ export default class InstagramService{
                 pictureUrl: profile.pictureUrl?profile.pictureUrl:null,
             })
         }
-        
+    }
+    
+    async getInstagramIds(){
+        let data = await this.InstagramProfile.find({})
+        return data.map(d => d.userId)
+    }
+
+    async createOrUpdateInstagramPost(post: {
+        postId: string
+        ownerId: string
+        shortCode: string
+        like?: number
+        comment?: number
+        content?: string
+        pictureUrl?: string
+    }){
+        let data = await this.InstagramPost.findOne({postId: post.postId, ownerId: post.ownerId})
+        if(data){
+            data.shortCode = post.shortCode?post.shortCode:data.shortCode
+            data.like = post.like?post.like:data.like
+            data.comment = post.comment?post.comment:data.comment
+            data.content = post.content?post.content:data.content
+            data.pictureUrl = post.pictureUrl?post.pictureUrl:data.pictureUrl
+        }else{
+            await this.InstagramPost.create({
+                postId: post.postId,
+                ownerId: post.ownerId,
+                shortCode: post.shortCode,
+                like: post.like?post.like:null,
+                comment: post.comment?post.comment:null,
+                content: post.content?post.content:null,
+                pictureUrl: post.pictureUrl?post.pictureUrl:null
+            })
+        }
     }
 }
