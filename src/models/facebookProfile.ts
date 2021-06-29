@@ -20,4 +20,4 @@ export const facebookProfileSchema = new Schema({
     likeValue: {
         type: Number, require: false, default: null
     }
-})
+},{ timestamps: true, collection: 'facebookProfile'})
