@@ -70,14 +70,48 @@ export default class InstagramApi extends InstagramService{
         }
     }
     async getPostComment(){
-        //https://www.instagram.com/graphql/query/?query_id=17852405266163336&shortcode=CPQyac5HHEs&first=100&after={}
+        //get post shortcodes
+        let postIdCodes = await super.getIGPostIdAndShortcode()
+        for(let postIdCode of postIdCodes){
+            //https://www.instagram.com/graphql/query/?query_id=17852405266163336&shortcode=CPQyac5HHEs&first=100&after={}
+            const config: AxiosRequestConfig = {
+                method: 'get',
+                url: `https://www.instagram.com/graphql/query/?query_id=17852405266163336&shortcode=${postIdCode.shortCode}&first=100`,
+                headers:{
+                    'Cookie': `sessionid=${sessionId}`,
+                    'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36'
+                }
+            }
+            let res = await axios(config)
+            if(res.status !== 200){
+                console.log(`status: ${res.status}`)
+                continue
+            }
+            if(res.data.data.shortcode_media == null){
+                continue
+            }
+            let comments = res.data.data.shortcode_media.edge_media_to_comment.edges
+            //write data to db
+            for(let comment of comments){
+                await super.createOrUpdateInstagramComment({
+                    commentId: comment.node.id,
+                    postId: postIdCode.postId,
+                    ownerId: postIdCode.ownerId,
+                    shortCode: postIdCode.shortCode,
+                    commenterId: comment.node.owner.id,
+                    commenterName: comment.node.owner.username,
+                    commenterPicture: comment.node.owner.profile_pic_url,
+                    content: comment.node.text,
+                })
+            }      
+        }   
     }
 }
 
 
 // const instagramApi = new InstagramApi()
 // async function aa(){
-//     await instagramApi.getPostDetail()
+//     await instagramApi.getPostComment()
 // }
 
 // setTimeout(aa,5000)
