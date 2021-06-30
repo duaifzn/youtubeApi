@@ -3,6 +3,9 @@ export const dev = {
     mongoUri: 'mongodb://0.0.0.0:27018/rt',
     instagram: {
         sessionId: '13371201014%3AHR0DY0KxykP3L4%3A21'
-    }
+    },
+    allowOrigins: [
+        'http://localhost:3000',
+    ]
     
 }

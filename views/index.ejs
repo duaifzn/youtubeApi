@@ -4,14 +4,32 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
     <title>home</title>
 </head>
 <body>
-    <form action="/youtube" method="POST">
+    <div>
         <label for="channelId">youtube channel id:</label>
         <input type="text" id="channelId" name="channelId">
-        <button type="submit">submit</button>
-    </form>
-
+        <button id="ytBtn">submit</button>
+        <label class="success" id="ytSuccess" hidden>success</label>
+        <label class="error" id="ytError" hidden>error</label>
+    </div>
+    <div>
+        <label for="facebookId">facebook id:</label>
+        <input type="text" id="facebookId" name="facebookId">
+        <button id="fbBtn">submit</button>
+        <label class="success" id="fbSuccess" hidden>success</label>
+        <label class="error" id="fbError" hidden>error</label>
+    </div>
+    <div>
+        <label for="instagramUserName">instagram user name:</label>
+        <input type="text" id="instagramUserName" name="instagramUserName">
+        <button id="igBtn">submit</button>
+        <label class="success" id="igSuccess" hidden>success</label>
+        <label class="error" id="igError" hidden>error</label>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="./js/index.js"></script>
 </body>
 </html>
