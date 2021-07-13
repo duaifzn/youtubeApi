@@ -2,7 +2,11 @@ import puppeteer from 'puppeteer';
 import fs from 'fs';
 import FacebookService from '../services/facebookService';
 import cheerio from 'cheerio';
-
+import { Config } from '../config/config'
+const config = Config[process.env.NODE_ENV]
+const fbEmail = config.facebook.email
+const fbPassword = config.facebook.password
+const headless = config.puppeteer.headless
 export default class FacebookApi extends FacebookService{
     page: puppeteer.Page
     browser: puppeteer.Browser
@@ -13,16 +17,24 @@ export default class FacebookApi extends FacebookService{
         this.browser = null
     }
     async login(){
+        try{
+            await this.loginCookies()
+        }catch(err){
+            console.error('loginCookies error')
+            await this.loginEmail()
+        }
+    }
+    async loginEmail(){
         const browser = await puppeteer.launch({
-            headless: false,
+            headless: headless,
             args: ['--no-sandbox', '--disable-setuid-sandbox'],
           })
         const page = await browser.newPage()
         await page.goto('https://zh-tw.facebook.com/')
         await page.waitForSelector('#email')
-        await page.type('#email', 'duaifzn@gmail.com', {delay: 10})
+        await page.type('#email', fbEmail, {delay: 10})
         await page.waitForSelector('#pass')
-        await page.type('#pass', 'QAZwsx1234', {delay: 10})
+        await page.type('#pass', fbPassword, {delay: 10})
         await page.click('button[name="login"]');
         await page.waitForTimeout(5000);
         let cookie = await page.cookies();
@@ -31,9 +43,9 @@ export default class FacebookApi extends FacebookService{
         this.browser = browser;
     }
     async loginCookies(){
-        let cookies = fs.readFileSync('./c.json', 'utf-8')
+        let cookies = fs.readFileSync('./cookies.json', 'utf-8')
         const browser = await puppeteer.launch({
-            headless: false,
+            headless: headless,
             args: ['--no-sandbox', '--disable-setuid-sandbox'],
           })
         const page = await browser.newPage()
@@ -99,6 +111,7 @@ export default class FacebookApi extends FacebookService{
             let commentCount = detail.commentCount?detail.commentCount:null
             let likeCount = null
             let shareCount = null
+            let followCount = null
 
             detail.interactionStatistic.forEach((d, index) =>{
                 if(JSON.stringify(d).includes('Like')){
@@ -107,9 +120,15 @@ export default class FacebookApi extends FacebookService{
                 if(JSON.stringify(d).includes('Share')){
                     shareCount = detail.interactionStatistic[index].userInteractionCount
                 }
+                if(JSON.stringify(d).includes('Follow')){
+                    followCount = detail.interactionStatistic[index].userInteractionCount
+                }
             })
             
             //write data to db
+            if(followCount){
+                await this.updateProfileFollowerValue(facebookPostAndOwnerId.ownerId, followCount)
+            }
             await super.createOrUpdateFacebookPost({
                 postId: facebookPostAndOwnerId.postId,
                 ownerId: facebookPostAndOwnerId.ownerId,
@@ -168,6 +187,12 @@ export default class FacebookApi extends FacebookService{
                 name: name
             })
         }
+    }
+    async updateProfileFollowerValue(profileId: string, followerValue: number){
+        await super.createFacebookProfile({
+            profileId: profileId,
+            followerValue: followerValue,
+        })
     }
     async browserClose(){
         await this.browser.close()

@@ -90,6 +90,16 @@ export default class FacebookService{
         }
     }
 
+    async getProfileAllPost(profileId: string){
+        try{
+            let datas = await this.FacebookPost.find({ownerId: profileId})
+            return [datas, null]
+        }catch(err){
+            return [null, err]
+        }
+        
+    }
+
     async getFacebookPostAndOwnerIds(){
         let data = await this.FacebookPost.find({})
         return data.map(d => {
@@ -127,9 +137,20 @@ export default class FacebookService{
         }
     }
 
+    async getPostAllComment(profileId: string, postId: string){
+        try{
+            let datas = await this.FacebookComment.find({
+                postId: postId,
+                ownerId: profileId,})
+            return [datas, null]
+        }catch(err){
+            return [null, err]
+        }
+    }
+
     async createFacebookProfile(profile:{
         profileId: string
-        name: string
+        name?: string
         followerValue?: number
         likeValue?: number
     }){
@@ -147,5 +168,15 @@ export default class FacebookService{
                 likeValue: profile.likeValue?profile.likeValue:null,
             })
         }
+    }
+
+    async getAllFacebookProfile(){
+        try{
+            let datas = await this.FacebookProfile.find({})
+            return [datas, null]
+        }catch(err){
+            return [null, err]
+        }
+        
     }
 }

@@ -13,8 +13,8 @@ router.get('/', (req, res) =>{
 router.post('/youtube',async (req, res) =>{
     let [data, err] = await youtubeService.createChannelId(req.body.channelId)
     if(err) {
-        console.error(err)
-        res.send(err)
+        console.error({status: 'can not get database data!!'})
+        res.send({status: 'can not get database data!!'})
     }else{
         res.send('ok')
     }
@@ -22,17 +22,18 @@ router.post('/youtube',async (req, res) =>{
 router.post('/facebook',async (req, res) =>{
     let [data, err] = await facebookService.createFacebookId(req.body.facebookId)
     if(err) {
-        console.error(err)
-        res.send(err)
+        console.error({status: 'can not get database data!!'})
+        res.send({status: 'can not get database data!!'})
     }else{
         res.send('ok')
     }
 })
+
 router.post('/instagram',async (req, res) =>{
     let [data, err] = await instagramService.createInstagramUserName(req.body.instagramUserName)
     if(err) {
-        console.error(err)
-        res.send(err)
+        console.error({status: 'can not get database data!!'})
+        res.send({status: 'can not get database data!!'})
     }else{
         res.send('ok')
     }
