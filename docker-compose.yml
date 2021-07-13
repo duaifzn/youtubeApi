@@ -1,0 +1,21 @@
+version: "3.7"
+
+services:
+  social:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: social
+    restart: always
+    ports:
+      - "8001:3000"
+    networks:
+      - ox-test
+
+
+networks:
+  default:
+    external: true
+    name: ox-test
+      
+
