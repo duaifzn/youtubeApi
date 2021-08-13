@@ -8,7 +8,7 @@ const config = Config[process.env.NODE_ENV];
 const mongoUri = config.mongoUri;
 
 export default class FacebookService{
-    FacebookId: Model<IFacebookId >;
+    FacebookId: Model<IFacebookId>;
     FacebookPost: Model<IFacebookPost>;
     FacebookComment: Model<IFacebookComment>
     FacebookProfile: Model<IFacebookProfile>
@@ -100,6 +100,15 @@ export default class FacebookService{
         
     }
 
+    async getOneFacebookPost(){
+        let posts = await this.FacebookPost.find({}).sort({createAt: -1}).limit(1)
+        return posts[0];
+    }
+
+    async getFacebookPostCount(): Promise<number>{
+        return await this.FacebookPost.countDocuments()
+    }
+
     async getFacebookPostAndOwnerIds(){
         let data = await this.FacebookPost.find({})
         return data.map(d => {
@@ -146,6 +155,15 @@ export default class FacebookService{
         }catch(err){
             return [null, err]
         }
+    }
+
+    async getOneFacebookComment(){
+        let posts = await this.FacebookComment.find({}).sort({createAt: -1}).limit(1)
+        return posts[0];
+    }
+
+    async getFacebookCommentCount(): Promise<number>{
+        return await this.FacebookComment.countDocuments()
     }
 
     async createFacebookProfile(profile:{

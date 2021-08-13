@@ -5,7 +5,8 @@ export interface IFacebookComment extends Document{
     postId: string,
     ownerId: string,
     commenter: string,
-    content: string
+    content: string,
+    wpCommentId: number,
 }
 
 export const facebookCommentSchema = new Schema({
@@ -23,5 +24,8 @@ export const facebookCommentSchema = new Schema({
     },
     content:{
         type: String, require: false, default: null
+    },
+    wpCommentId:{
+        type: Number, require: false, default: null
     }
 },{ timestamps: true, collection: 'facebookComment' })

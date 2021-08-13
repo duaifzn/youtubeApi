@@ -13,6 +13,14 @@ export const dev = {
     },
     allowOrigins: [
         'http://localhost:3000',
-    ]
+    ],
+    wordpressDb: {
+        username: "root",
+        password: "root",
+        database: "wordpress",
+        host: "127.0.0.1",
+        port: 3313,
+        dialect: "mysql"
+    }
     
 }
