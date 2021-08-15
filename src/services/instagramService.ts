@@ -1,45 +1,7 @@
-import mongoose, { Model } from 'mongoose';
-import { instagramProfileSchema, IInstagramProfile } from '../models/instagramProfile';
-import { instagramUserNameSchema, IInstagramUserName } from '../models/instagramUserName'; 
-import { instagramPostSchema, IInstagramPost} from '../models/instagramPost';
-import { instagramCommentSchema, IInstagramComment } from '../models/instagramComment';
-import { Config } from '../config/config';
-const config = Config[process.env.NODE_ENV];
-const mongoUri = config.mongoUri;
-
-export default class InstagramService{
-    InstagramProfile: Model<IInstagramProfile>
-    InstagramUserName: Model<IInstagramUserName>
-    InstagramPost: Model<IInstagramPost>
-    InstagramComment: Model<IInstagramComment>
-    
+import Mongo from "../models/_index"
+export default class InstagramService extends Mongo {
     constructor(){
-        this.InstagramProfile = null
-        this.InstagramUserName = null
-        this.InstagramPost = null
-        this.InstagramComment = null
-        this.connectMongo()
-    }
-    connectMongo(){
-        mongoose.connect(mongoUri,{
-            authSource: 'admin',
-            user: 'eagle',
-            pass: 'eagle-eye',
-            useNewUrlParser: true,
-            useCreateIndex: true,
-            useUnifiedTopology: true,
-        })
-        const db = mongoose.connection
-        db.once('open', () =>{
-            console.log('mongodb connect!')
-            this.InstagramProfile = db.model<IInstagramProfile>('InstagramProfile', instagramProfileSchema)
-            this.InstagramUserName = db.model<IInstagramUserName>('InstagramUserName', instagramUserNameSchema)
-            this.InstagramPost = db.model<IInstagramPost>('InstagramPostSchema', instagramPostSchema)
-            this.InstagramComment = db.model<IInstagramComment>('InstagramCommentSchema', instagramCommentSchema)
-        })
-        db.on('error', () =>{
-            console.log('mongodb error!!')
-        })
+        super()
     }
 
     async createInstagramUserName(userName: string){

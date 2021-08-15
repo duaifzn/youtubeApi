@@ -3,7 +3,7 @@ import { youtubeChannelData } from '../controllers/youtubeApi'
 import YoutubeService from '../services/youtubeService'
 
 export default class YoutubeSchedule extends YoutubeService{
-    async runSchedule(){
+    async runYoutubeSchedule(){
         cron.schedule('2 * * * *', async () =>{
             console.log('run schedule')
             const channelIds = await super.getChannelIds();

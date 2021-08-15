@@ -30,4 +30,10 @@ export default class FacebookSchedule extends FacebookApi{
             await super.browserClose()
         })
     }
+    async runFacebookSchedule(){
+        await this.runGetPostIdsSchedule()
+        await this.runGetPostCommentSchedule()
+        await this.runGetPostDetailSchedule()
+        await this.runGetProfileDetailSchedule()
+    }
 }

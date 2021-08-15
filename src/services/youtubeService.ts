@@ -1,43 +1,9 @@
-import mongoose, { Model } from 'mongoose';
-import { youtubeSchema, IYoutube } from '../models/youtube';
-import { youtubeCommentSchema, IYoutubeComment } from '../models/youtubeComment'
-import { youtubeChannelIdSchema, IYoutubeChannelId } from '../models/youtubeChannelId'
-import { Config } from '../config/config'
-const config = Config[process.env.NODE_ENV];
-const mongoUri = config.mongoUri;
-
-export default class YoutubeService{
-    Youtube: Model<IYoutube>;
-    YoutubeComment: Model<IYoutubeComment>;
-    YoutubeChannelId: Model<IYoutubeChannelId>;
-
+import Mongo from '../models/_index';
+export default class YoutubeService extends Mongo {
     constructor(){
-        this.Youtube = null
-        this.YoutubeComment = null
-        this.YoutubeChannelId = null
-        this.connectMongo()
+        super()
     }
-    connectMongo(){
-        mongoose.connect(mongoUri, {
-        authSource: 'admin',
-        user: 'eagle',
-        pass: 'eagle-eye',
-        useNewUrlParser: true,
-        useCreateIndex: true,
-        useUnifiedTopology: true, })
-
-        const db = mongoose.connection
-        db.once('open', () =>{
-            console.log('mongodb connect!')
-            this.Youtube = db.model<IYoutube>('Youtube', youtubeSchema)
-            this.YoutubeComment = db.model<IYoutubeComment>('YoutubeComment', youtubeCommentSchema)
-            this.YoutubeChannelId = db.model<IYoutubeChannelId>('YoutubeChannelId', youtubeChannelIdSchema)
-        })
-        db.on('error', () =>{
-            console.log('mongodb error!!')
-        })
-    }
-
+    
     async createVideo(video: {
         videoId: string,
         href: string,

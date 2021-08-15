@@ -35,7 +35,7 @@ export default class WordpressService {
         //write post image to wordpress
         //write keywords to wordpress
         for(let keyword of keywords){
-            await this.createOneLabel(keyword.word, newWpPost.ID)
+            await this.createOneTag(keyword.word, newWpPost.ID)
         }
         return newWpPost
     }
@@ -68,15 +68,15 @@ export default class WordpressService {
         `
     }
 
-    public async createOneLabel(labelName: string, wpPostId: number){
-        let [label, created] = await WpTerm.findOrCreate({
-                where: { name: labelName }
+    public async createOneTag(tagName: string, wpPostId: number){
+        let [tag, created] = await WpTerm.findOrCreate({
+                where: { name: tagName }
             })
 
         let [wpTermTaxonomy, created2] = await WpTermTaxonomy.findOrCreate({
-                where: { term_id: label.term_id },
+                where: { term_id: tag.term_id },
                 defaults:{
-                    term_id: label.term_id,
+                    term_id: tag.term_id,
                     taxonomy: 'post_tag' 
                 }
             })

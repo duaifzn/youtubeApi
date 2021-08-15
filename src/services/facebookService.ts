@@ -1,46 +1,10 @@
-import mongoose, { Model } from 'mongoose';
-import { facebookIdSchema, IFacebookId } from '../models/facebookId';
-import { facebookPostSchema, IFacebookPost } from '../models/facebookPost';
-import { facebookCommentSchema, IFacebookComment } from '../models/facebookComment';
-import { facebookProfileSchema, IFacebookProfile } from '../models/facebookProfile';
-import { Config } from '../config/config'
-const config = Config[process.env.NODE_ENV];
-const mongoUri = config.mongoUri;
+import Mongo from "../models/_index";
 
-export default class FacebookService{
-    FacebookId: Model<IFacebookId>;
-    FacebookPost: Model<IFacebookPost>;
-    FacebookComment: Model<IFacebookComment>
-    FacebookProfile: Model<IFacebookProfile>
-
+export default class FacebookService extends Mongo {
     constructor(){
-        this.FacebookId = null
-        this.FacebookPost = null
-        this.FacebookComment = null
-        this.connectMongo()
+        super()
     }
-    connectMongo(){
-        mongoose.connect(mongoUri, {
-        authSource: 'admin',
-        user: 'eagle',
-        pass: 'eagle-eye',
-        useNewUrlParser: true,
-        useCreateIndex: true,
-        useUnifiedTopology: true, })
-
-        const db = mongoose.connection
-        db.once('open', () =>{
-            console.log('mongodb connect!')
-            this.FacebookId = db.model<IFacebookId>('FacebookId', facebookIdSchema)
-            this.FacebookPost = db.model<IFacebookPost>('FacebookPost', facebookPostSchema)
-            this.FacebookComment = db.model<IFacebookComment>('FacebookComment', facebookCommentSchema)
-            this.FacebookProfile = db.model<IFacebookProfile>('FacebookProfile', facebookProfileSchema)
-        })
-        db.on('error', () =>{
-            console.log('mongodb error!!')
-        })
-    }
-
+    
     async createFacebookId(facebookId: string){
         try{
             let data = await this.FacebookId.findOne({id: facebookId})
