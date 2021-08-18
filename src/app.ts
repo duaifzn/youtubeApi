@@ -5,19 +5,21 @@ import router from './routes/route'
 import YoutubeSchedule from './schedules/youtubeSchedule'
 import FacebookSchedule from './schedules/facebookSchedule'
 import InstagramSchedule from './schedules/instagramSchedule'
+import FbToWordpressSchedule from './schedules/fbToWordpressSchedule'
 import { sequelize } from './models/wordpress/_index'
-import { Mixin } from 'ts-mixer'
-export default class App extends Mixin(YoutubeSchedule, FacebookSchedule, InstagramSchedule){
+let youtubeSchedule = new YoutubeSchedule()
+let instagramSchedule = new InstagramSchedule()
+let facebookSchedule = new FacebookSchedule()
+let fbToWordpressSchedule = new FbToWordpressSchedule()
+export default class App {
   app: express.Application
   port: number
   constructor(){
-    super()
     this.app = express()
     this.port = Number(process.env.PORT) || 3000;
     this.config()
     this.listen()
     this.connectWordpressDb()
-    this.runAllSchedule()
   }
 
   config(){
@@ -49,11 +51,16 @@ export default class App extends Mixin(YoutubeSchedule, FacebookSchedule, Instag
     });
   }
 
-  runAllSchedule(){
-    super.runFacebookSchedule()
-    super.runInstagramSchedule()
-    super.runYoutubeSchedule()
+  async runFbCronjob(){
+    await facebookSchedule.runFacebookSchedule()
+    await fbToWordpressSchedule.runFbToWordpressSchedules()
+  }
+
+  async runIgCronjob(){
+    await instagramSchedule.runInstagramSchedule()
+  }
+
+  async runYtCronjob(){
+    await youtubeSchedule.runYoutubeSchedule()
   }
 }
-
-let test = new App()

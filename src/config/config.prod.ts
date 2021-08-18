@@ -1,24 +1,32 @@
+import dotenv from 'dotenv'
+dotenv.config()
+
 export const prod = {
-    youtubeKey: 'AIzaSyBKgc_Q_DYQ6kDUAQMPKcbzK75BngqvKUs',
-    mongoUri: 'mongodb://ox-test-mongo:27019/rt',
+    youtubeKey: process.env.YOUTUBE_KEY,
     puppeteer: {
         headless: true,
     },
     facebook: {
-        email: 'duaifzn@gmail.com',
-        password: 'QAZwsx1234',
+        email: process.env.FACEBOOK_EMAIL,
+        password: process.env.FACEBOOK_PASSWORD,
     },
     instagram: {
-        sessionId: '13371201014%3AHR0DY0KxykP3L4%3A21'
+        sessionId: process.env.INSTAGRAM_SESSION_ID
     },
     allowOrigins: [
         'http://localhost:3000',
     ],
+    mongoDb: {
+        mongoUri: process.env.MONGO_DB_URI,
+        authSource: 'admin',
+        user: process.env.MONGO_DB_USER,
+        pass: process.env.MONGO_DB_PASS,
+    },
     wordpressDb: {
-        username: "root",
-        password: null,
-        database: "database_development",
-        host: "127.0.0.1",
+        username: process.env.WORDPRESS_DB_USER,
+        password: process.env.WORDPRESS_DB_PASSWORD,
+        database: process.env.WORDPRESS_DB_NAME,
+        host: process.env.WORDPRESS_DB_HOST,
         dialect: "mysql"
     }
 }

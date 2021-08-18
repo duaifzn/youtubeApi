@@ -1,6 +1,5 @@
 export const dev = {
     youtubeKey: 'AIzaSyBKgc_Q_DYQ6kDUAQMPKcbzK75BngqvKUs',
-    mongoUri: 'mongodb://0.0.0.0:27018/rt',
     puppeteer: {
         headless: false,
     },
@@ -14,6 +13,12 @@ export const dev = {
     allowOrigins: [
         'http://localhost:3000',
     ],
+    mongoDb: {
+        mongoUri: 'mongodb://0.0.0.0:27018/rt',
+        authSource: 'admin',
+        user: 'eagle',
+        pass: 'eagle-eye',
+    },
     wordpressDb: {
         username: "root",
         password: "root",

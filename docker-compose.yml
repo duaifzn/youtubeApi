@@ -1,21 +1,78 @@
 version: "3.7"
 
 services:
-  social:
+  social-nodejs-server:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: social
+    container_name: social-nodejs-server
     restart: always
     ports:
       - "8001:3000"
+    command: npm run start:server
+    depends_on:
+      - social-mongo
     networks:
-      - ox-test
+      - social
 
+  social-fb-cronjob:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: social-fb-cronjob
+    restart: always
+    ports:
+      - ":3000"
+    command: npm run start:fb
+    depends_on:
+     - social-mongo
+    networks:
+      - social
+
+  # social-ig-cronjob:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: social-ig-cronjob
+  #   restart: always
+  #   ports:
+  #     - ":3000"
+  #   command: npm run start:fb
+  #   depends_on:
+  #     - social-mongo
+  #   networks:
+  #     - social
+
+  # social-yt-cronjob:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: social-yt-cronjob
+  #   restart: always
+  #   ports:
+  #     - ":3000"
+  #   command: npm run start:fb
+  #   depends_on:
+  #     - social-mongo
+  #   networks:
+  #     - social
+
+  social-mongo:
+    image: mongo
+    container_name: social-mongo
+    restart: always
+    ports:
+      - "27020:27017"
+    environment: 
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: admin
+    networks: 
+      - social
 
 networks:
-  default:
-    external: true
-    name: ox-test
+  social:
+    driver: bridge
+
       
 

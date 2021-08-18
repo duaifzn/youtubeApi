@@ -4,8 +4,11 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "dev": "NODE_ENV=dev ts-node src/app.ts",
-    "start": "tsc && NODE_ENV=prod node dist/app.js",
+    "dev": "NODE_ENV=dev ts-node src/fbCrawler.ts",
+    "start:server": "tsc && NODE_ENV=prod node dist/server.js",
+    "start:fb": "tsc && NODE_ENV=prod node dist/fbCrawler.js",
+    "start:ig": "tsc && NODE_ENV=prod node dist/igCrawler.js",
+    "start:yt": "tsc && NODE_ENV=prod node dist/ytCrawler.js",
     "seed:env": "NODE_ENV=dev ts-node src/seeders/*.ts"
   },
   "keywords": [],
@@ -25,6 +28,7 @@
     "axios": "^0.21.1",
     "cheerio": "*",
     "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "mongoose": "^5.12.13",

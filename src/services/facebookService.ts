@@ -64,13 +64,18 @@ export default class FacebookService extends Mongo {
         
     }
 
-    async getOneFacebookPost(){
-        let posts = await this.FacebookPost.find({}).sort({createAt: -1}).limit(1)
+    async getOneFacebookPost(position: number){
+        let posts = await this.FacebookPost.find({}).sort({_id: -1}).skip(position).limit(1)
         return posts[0];
     }
 
+    async getOneFacebookPostByPostId(postId: string){
+        let post = await this.FacebookPost.findOne({postId: postId})
+        return post;
+    }
+
     async getFacebookPostCount(): Promise<number>{
-        return await this.FacebookPost.countDocuments()
+        return await this.FacebookPost.countDocuments({})
     }
 
     async getFacebookPostAndOwnerIds(){
@@ -121,16 +126,16 @@ export default class FacebookService extends Mongo {
         }
     }
 
-    async getOneFacebookComment(){
-        let posts = await this.FacebookComment.find({}).sort({createAt: -1}).limit(1)
+    async getOneFacebookComment(position: number){
+        let posts = await this.FacebookComment.find({}).sort({_id: -1}).skip(position).limit(1)
         return posts[0];
     }
 
     async getFacebookCommentCount(): Promise<number>{
-        return await this.FacebookComment.countDocuments()
+        return await this.FacebookComment.countDocuments({})
     }
 
-    async createFacebookProfile(profile:{
+    async createOrUpdateFacebookProfile(profile:{
         profileId: string
         name?: string
         followerValue?: number

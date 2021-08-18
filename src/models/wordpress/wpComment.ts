@@ -4,19 +4,19 @@ import { sequelize } from './_index';
 interface WpCommentAttributes {
     comment_ID: number
     comment_post_ID: number
-    comment_author: Text
-    comment_author_email: string
-    comment_author_url: string
-    comment_author_IP: string
+    comment_author: string
+    comment_author_email?: string
+    comment_author_url?: string
+    comment_author_IP?: string
     comment_date?: Date
     comment_date_gmt?: Date
-    comment_content: Text
-    comment_karma: number
-    comment_approved: string
-    comment_agent: string
-    comment_type: string
-    comment_parent: number
-    user_id: number
+    comment_content: string
+    comment_karma?: number
+    comment_approved?: string
+    comment_agent?: string
+    comment_type?: string
+    comment_parent?: number
+    user_id?: number
 };
 
 /*
@@ -31,19 +31,19 @@ interface WpCommentModel
   extends Model<WpCommentAttributes, WpCommentCreationAttributes>{
     comment_ID: number
     comment_post_ID: number
-    comment_author: Text
-    comment_author_email: string
-    comment_author_url: string
-    comment_author_IP: string
+    comment_author: string
+    comment_author_email?: string
+    comment_author_url?: string
+    comment_author_IP?: string
     comment_date?: Date
     comment_date_gmt?: Date
-    comment_content: Text
-    comment_karma: number
-    comment_approved: string
-    comment_agent: string
-    comment_type: string
-    comment_parent: number
-    user_id: number
+    comment_content: string
+    comment_karma?: number
+    comment_approved?: string
+    comment_agent?: string
+    comment_type?: string
+    comment_parent?: number
+    user_id?: number
   }
 
 
@@ -57,16 +57,19 @@ const WpComment = sequelize.define<WpCommentModel>('wp_comment', {
         type: DataTypes.INTEGER
     },
     comment_author: {
-        type: DataTypes.TEXT
+        type: DataTypes.STRING
     },
     comment_author_email: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        defaultValue: 'server auto'
     },
     comment_author_url: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        defaultValue: 'server auto'
     },
     comment_author_IP: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        defaultValue: 'server auto'
     },
     comment_date: {
         type: DataTypes.DATE,
@@ -76,25 +79,31 @@ const WpComment = sequelize.define<WpCommentModel>('wp_comment', {
         type: DataTypes.DATE
     },
     comment_content: {
-        type: DataTypes.TEXT
+        type: DataTypes.STRING
     },
     comment_karma: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        defaultValue: 0
     },
     comment_approved: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        defaultValue: 1
     },
     comment_agent: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        defaultValue: 'server auto'
     },
     comment_type: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        defaultValue: 'comment'
     },
     comment_parent: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        defaultValue: 0
     },
     user_id: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        defaultValue: 0
     },
 },{
     timestamps: false,

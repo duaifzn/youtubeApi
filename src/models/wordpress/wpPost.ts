@@ -10,7 +10,7 @@ interface WpPostAttributes {
     post_status: string,
     guid?: string,
     post_type: string,
-    post_name: string,
+    post_name?: string,
     post_date?: Date,
     post_date_gmt?: Date
     post_modified?: Date,
@@ -28,7 +28,7 @@ interface WpPostAttributes {
 interface WpPostCreationAttributes
   extends Optional<WpPostAttributes, 'ID'> {}
 
-interface WpPostModel
+export interface WpPostModel
   extends Model<WpPostAttributes, WpPostCreationAttributes>{
     ID?: number;
     post_author: number;
@@ -38,7 +38,7 @@ interface WpPostModel
     post_status: string;
     guid?: string;
     post_type: string;
-    post_name: string;
+    post_name?: string;
     post_date?: Date;
     post_date_gmt?: Date
     post_modified?: Date;
@@ -77,7 +77,7 @@ const WpPost = sequelize.define<WpPostModel>('wp_post', {
         type: DataTypes.STRING
     },
     post_name: {
-        type: DataTypes.STRING
+        type: DataTypes.TEXT
     },
     post_date: {
         type: DataTypes.DATE,
@@ -116,14 +116,16 @@ const WpPost = sequelize.define<WpPostModel>('wp_post', {
             wpPost.setDataValue('post_modified_gmt', new Date(postModified.getTime() + postModified.getTimezoneOffset()*60000))
         },
         afterCreate: async (wpPost) =>{
-            await wpPost.update({guid: `http://localhost/?p=${wpPost.getDataValue('ID')}`})
+            wpPost.setDataValue('guid', `http://localhost/?p=${wpPost.getDataValue('ID')}`)
+            wpPost.setDataValue('post_name', wpPost.getDataValue('ID'))
+            await wpPost.save()
         },
         beforeUpdate: (wpPost) =>{
             let postModified = new Date()
             let postModifiedGmt = new Date(postModified.getTime() + postModified.getTimezoneOffset()*60000)
             wpPost.setDataValue('post_modified', postModified)
             wpPost.setDataValue('post_modified_gmt', postModifiedGmt)
-        }
+        },
     }
 })
 

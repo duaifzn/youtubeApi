@@ -107,7 +107,7 @@ export default class FacebookApi extends FacebookService{
            
             let titleOption = detail.articleBody || detail.description
             let title = titleOption?titleOption:null
-            let imgUrl = detail.image?detail.image.contentUrl:null
+            let imgUrl = detail.image?detail.image[0].contentUrl:null
             let commentCount = detail.commentCount?detail.commentCount:null
             let likeCount = null
             let shareCount = null
@@ -150,9 +150,20 @@ export default class FacebookApi extends FacebookService{
                 let ans = []
                 let comments = document.querySelectorAll('div[data-sigil="comment"]')
                 comments.forEach(comment =>{
+                    let commenter = 'unknown'
+                    if(comment.querySelector('div:nth-child(2) > div > div > div > a')){
+                        commenter = comment.querySelector('div:nth-child(2) > div > div > div > a').textContent
+                    }
+                    else if(comment.querySelector('div:nth-child(2) > div > div > a')){
+                        commenter = comment.querySelector('div:nth-child(2) > div > div > a').lastChild.textContent
+                    }
+                    else if(comment.querySelector('div:nth-child(2) > div > a')){
+                        commenter = comment.querySelector('div:nth-child(2) > div > a').lastChild.textContent
+                    }
                     ans.push({
                         id: comment.id,
-                        content: comment.textContent
+                        commenter: commenter,
+                        content: comment.querySelector('div[data-sigil="comment-body"]').textContent,
                     })
                 })
                 return ans
@@ -164,7 +175,8 @@ export default class FacebookApi extends FacebookService{
                     commentId: comment.id,
                     postId: facebookPostAndOwnerId.postId,
                     ownerId: facebookPostAndOwnerId.ownerId,
-                    content: comment.content
+                    commenter: comment.commenter,
+                    content: comment.content,
                 })
             }
             
@@ -182,14 +194,14 @@ export default class FacebookApi extends FacebookService{
                 }
                 return name
             })
-            await super.createFacebookProfile({
+            await super.createOrUpdateFacebookProfile({
                 profileId: facebookId,
                 name: name
             })
         }
     }
     async updateProfileFollowerValue(profileId: string, followerValue: number){
-        await super.createFacebookProfile({
+        await super.createOrUpdateFacebookProfile({
             profileId: profileId,
             followerValue: followerValue,
         })
@@ -203,8 +215,6 @@ export default class FacebookApi extends FacebookService{
 
 // let a = new FacebookApi()
 // async function aa(){
-//     await a.loginCookies()
-//     //await a.getPostIds()
-//     await a.getPostDetail()
+//     console.log(await a.getPostIds())
 // }
 // setTimeout(aa, 5000)

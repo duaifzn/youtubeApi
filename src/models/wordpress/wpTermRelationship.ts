@@ -32,5 +32,6 @@ const WpTermRelationship = sequelize.define<WpTermRelationshipModel>('wp_term_re
     timestamps: false,
     tableName: 'wp_term_relationships'
 })
+WpTermRelationship.removeAttribute('id')
 
 export default WpTermRelationship;

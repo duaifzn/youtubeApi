@@ -12,7 +12,7 @@ import { youtubeChannelIdSchema, IYoutubeChannelId } from "./youtubeChannelId";
 import { youtubeCommentSchema, IYoutubeComment } from "./youtubeComment";
 import { Config } from '../config/config'
 const config = Config[process.env.NODE_ENV];
-const mongoUri = config.mongoUri;
+const mongoDb = config.mongoDb;
 
 export default class Mongo {
     FacebookId: Model<IFacebookId>
@@ -41,10 +41,10 @@ export default class Mongo {
         this.connectMongo()
     }
     connectMongo(){
-        mongoose.connect(mongoUri, {
-            authSource: 'admin',
-            user: 'eagle',
-            pass: 'eagle-eye',
+        mongoose.connect(mongoDb.mongoUri, {
+            authSource: mongoDb.authSource,
+            user: mongoDb.user,
+            pass: mongoDb.pass,
             useNewUrlParser: true,
             useCreateIndex: true,
             useUnifiedTopology: true, })
