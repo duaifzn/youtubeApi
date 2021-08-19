@@ -71,9 +71,8 @@ services:
       - social
 
 networks:
-  default:
+  social:
     external: true
-    name: social
 
       
 
