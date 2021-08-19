@@ -27,6 +27,7 @@ export const prod = {
         password: process.env.WORDPRESS_DB_PASSWORD,
         database: process.env.WORDPRESS_DB_NAME,
         host: process.env.WORDPRESS_DB_HOST,
+        port: process.env.WORDPRESS_DB_PORT,
         dialect: "mysql"
     }
 }
