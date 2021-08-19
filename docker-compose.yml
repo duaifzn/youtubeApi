@@ -21,8 +21,8 @@ services:
       dockerfile: Dockerfile
     container_name: social-fb-cronjob
     restart: always
-    ports:
-      - ":3000"
+    expose:
+      - "3000"
     command: npm run start:fb
     depends_on:
      - social-mongo
