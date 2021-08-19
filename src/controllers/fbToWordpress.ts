@@ -58,16 +58,16 @@ export default class FbToWordpress extends FacebookService {
     }
 }
 
-sequelize.authenticate()
-    .then(async () => {
-      console.log("connected to wordpress db.")
-    }).catch((err) => {
-      console.log("connect wordpress db fail!!")
-      console.error(err)
-    });
+// sequelize.authenticate()
+//     .then(async () => {
+//       console.log("connected to wordpress db.")
+//     }).catch((err) => {
+//       console.log("connect wordpress db fail!!")
+//       console.error(err)
+//     });
 
-let test = new FbToWordpress()
-async function aa(){
-    await test.allFBToWordpressDb()
-}
-setTimeout(aa, 10000)
+// let test = new FbToWordpress()
+// async function aa(){
+//     await test.allFBToWordpressDb()
+// }
+// setTimeout(aa, 10000)
