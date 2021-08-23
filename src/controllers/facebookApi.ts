@@ -104,10 +104,20 @@ export default class FacebookApi extends FacebookService{
                 let data = datas[datas.length-1].innerHTML
                 return JSON.parse(data)
             })
-           
+            let imageUrlFromStyle = await this.page.evaluate(() =>{
+                let img = document.querySelectorAll('div.story_body_container i[role="img"]')[2]
+                if(!img){
+                    return null
+                }
+                let style = img.getAttribute('style')
+                let originImgUrl = style.slice(style.indexOf("('")+2, style.indexOf("')"))
+                let imgUrl = originImgUrl.replace(/\s/g,'').replace(/\\/g, '\\u00')
+                return eval("'" + imgUrl + "'")
+            })
+
             let titleOption = detail.articleBody || detail.description
             let title = titleOption?titleOption:null
-            let imgUrl = detail.image?detail.image[0].contentUrl:null
+            let imgUrl = detail.image?detail.image[0].contentUrl:imageUrlFromStyle
             let commentCount = detail.commentCount?detail.commentCount:null
             let likeCount = null
             let shareCount = null
@@ -140,6 +150,13 @@ export default class FacebookApi extends FacebookService{
             })
         }
     }
+
+    getUrlFromStyle(style: string): string{
+        let originImgUrl = style.slice(style.indexOf("('")+2, style.indexOf("')"))
+        let imgUrl = originImgUrl.replace(/\s/g,'').replace(/\\/g, '\\u00')
+        return eval("'" + imgUrl + "'")
+    }
+    
     async getPostComment(){
         //get post ids
         let facebookPostAndOwnerIds = await super.getFacebookPostAndOwnerIds()
