@@ -59,10 +59,12 @@ const WpPost = sequelize.define<WpPostModel>('wp_post', {
         type: DataTypes.INTEGER
     },
     post_title: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        defaultValue: 'no post title'
     },
     post_content: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        defaultValue: 'no post content'
     },
     post_excerpt: {
         type: DataTypes.STRING

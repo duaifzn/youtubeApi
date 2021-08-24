@@ -28,9 +28,6 @@ export default class FbToWordpress extends FacebookService {
         //get one comment from mongodb
         let comment = await super.getOneFacebookComment(position)
         let post = await super.getOneFacebookPostByPostId(comment.postId)
-        if(!post){
-            console.log(comment)
-        }
         //write to wordpress db
         let wpComment = await wordpressService.createOrUpdateWPComment(post.wpPostId, comment)
         //write wordpress comment id to mongodb
