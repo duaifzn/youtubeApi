@@ -29,5 +29,9 @@ export const prod = {
         host: process.env.WORDPRESS_DB_HOST,
         port: process.env.WORDPRESS_DB_PORT,
         dialect: "mysql"
+    },
+    jwt: {
+        secret: 'jwtSecret',
+        expiresIn: '7d'
     }
 }

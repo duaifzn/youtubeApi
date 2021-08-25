@@ -1,4 +1,4 @@
-import {Schema, Document} from 'mongoose';
+import {Schema, Document, model } from 'mongoose';
 
 export interface IYoutubeComment extends Document{
     videoId: string,
@@ -33,3 +33,5 @@ export const youtubeCommentSchema = new Schema({
         type: Date, require: true
     }
 },{ timestamps: true, collection: 'youtubeComment' })
+
+export const YoutubeComment = model<IYoutubeComment>('YoutubeComment', youtubeCommentSchema)

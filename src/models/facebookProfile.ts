@@ -1,4 +1,4 @@
-import { Schema, Document } from "mongoose";
+import { Schema, Document, model } from "mongoose";
 
 export interface IFacebookProfile extends Document {
     profileId: string
@@ -21,3 +21,5 @@ export const facebookProfileSchema = new Schema({
         type: Number, require: false, default: null
     }
 },{ timestamps: true, collection: 'facebookProfile'})
+
+export const FacebookProfile = model<IFacebookProfile>('FacebookProfile', facebookProfileSchema)

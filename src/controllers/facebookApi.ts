@@ -60,7 +60,7 @@ export default class FacebookApi extends FacebookService{
         for(const facebookId of facebookIds){
             await this.page.goto(`https://m.facebook.com/${facebookId}`)
             let postsValue = 0
-            while(postsValue < 10){
+            while(postsValue < 5){
                 await this.page.mouse.wheel({ deltaY: 100 });
                 postsValue = await this.page.evaluate(() =>{
                     let articles = document.getElementsByTagName('article')

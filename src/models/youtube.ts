@@ -1,4 +1,4 @@
-import {Schema, Document} from 'mongoose';
+import {Schema, Document, model} from 'mongoose';
 
 export interface IYoutube extends Document{
     videoId: string,
@@ -37,3 +37,5 @@ export const youtubeSchema = new Schema({
         type: String, require: true
     },
 },{ timestamps: true, collection: 'youtube' })
+
+export const Youtube = model<IYoutube>('Youtube', youtubeSchema)

@@ -1,4 +1,4 @@
-import {Schema, Document} from 'mongoose';
+import {Schema, Document, model} from 'mongoose';
 
 export interface IFacebookPost extends Document{
     postId: string,
@@ -37,3 +37,5 @@ export const facebookPostSchema = new Schema({
         type: Number, require: false, default: null
     }
 },{ timestamps: true, collection: 'facebookPost' })
+
+export const FacebookPost = model<IFacebookPost>('FacebookPost', facebookPostSchema)

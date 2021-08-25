@@ -1,15 +1,15 @@
-import Mongo from "../models/_index";
+import { FacebookComment } from "../models/facebookComment";
+import { FacebookId } from "../models/facebookId";
+import { FacebookPost } from "../models/facebookPost";
+import { FacebookProfile } from "../models/facebookProfile";
 
-export default class FacebookService extends Mongo {
-    constructor(){
-        super()
-    }
+export default class FacebookService {
     
     async createFacebookId(facebookId: string){
         try{
-            let data = await this.FacebookId.findOne({id: facebookId})
+            let data = await FacebookId.findOne({id: facebookId})
             if(!data){
-                data = await this.FacebookId.create({
+                data = await FacebookId.create({
                     id: facebookId
                 })
             }  
@@ -20,7 +20,7 @@ export default class FacebookService extends Mongo {
     }
 
     async getFacebookIds(): Promise<any[]>{
-        let data = await this.FacebookId.find({})
+        let data = await FacebookId.find({})
         return data.map(d => d.id)
     }
 
@@ -33,7 +33,7 @@ export default class FacebookService extends Mongo {
         share?: number,
         comment?: number
     }){
-        let data = await this.FacebookPost.findOne({postId: post.postId})
+        let data = await FacebookPost.findOne({postId: post.postId})
         if(data){
             data.title = post.title?post.title: data.title
             data.img = post.img?post.img: data.img
@@ -42,7 +42,7 @@ export default class FacebookService extends Mongo {
             data.comment = post.comment?post.comment: data.comment
             await data.save()
         }else{
-            await this.FacebookPost.create({
+            await FacebookPost.create({
                 postId: post.postId,
                 ownerId: post.ownerId,
                 title: post.title?post.title:null,
@@ -56,7 +56,7 @@ export default class FacebookService extends Mongo {
 
     async getProfileAllPost(profileId: string){
         try{
-            let datas = await this.FacebookPost.find({ownerId: profileId})
+            let datas = await FacebookPost.find({ownerId: profileId})
             return [datas, null]
         }catch(err){
             return [null, err]
@@ -65,21 +65,21 @@ export default class FacebookService extends Mongo {
     }
 
     async getOneFacebookPost(position: number){
-        let posts = await this.FacebookPost.find({}).sort({_id: -1}).skip(position).limit(1)
+        let posts = await FacebookPost.find({}).sort({_id: -1}).skip(position).limit(1)
         return posts[0];
     }
 
     async getOneFacebookPostByPostId(postId: string){
-        let post = await this.FacebookPost.findOne({postId: postId})
+        let post = await FacebookPost.findOne({postId: postId})
         return post;
     }
 
     async getFacebookPostCount(): Promise<number>{
-        return await this.FacebookPost.countDocuments({})
+        return await FacebookPost.countDocuments({})
     }
 
     async getFacebookPostAndOwnerIds(){
-        let data = await this.FacebookPost.find({})
+        let data = await FacebookPost.find({})
         return data.map(d => {
             return { 
                 postId: d.postId,
@@ -95,7 +95,7 @@ export default class FacebookService extends Mongo {
         commenter?: string,
         content?: string
     }){
-        let data = await this.FacebookComment.findOne({
+        let data = await FacebookComment.findOne({
             commentId: comment.commentId,
             postId: comment.postId,
             ownerId: comment.ownerId,
@@ -105,7 +105,7 @@ export default class FacebookService extends Mongo {
             data.content = comment.content?comment.content:data.content
             await data.save()
         }else{
-            await this.FacebookComment.create({
+            await FacebookComment.create({
                 commentId: comment.commentId,
                 postId: comment.postId,
                 ownerId: comment.ownerId,
@@ -117,7 +117,7 @@ export default class FacebookService extends Mongo {
 
     async getPostAllComment(profileId: string, postId: string){
         try{
-            let datas = await this.FacebookComment.find({
+            let datas = await FacebookComment.find({
                 postId: postId,
                 ownerId: profileId,})
             return [datas, null]
@@ -127,12 +127,12 @@ export default class FacebookService extends Mongo {
     }
 
     async getOneFacebookComment(position: number){
-        let posts = await this.FacebookComment.find({}).sort({_id: -1}).skip(position).limit(1)
+        let posts = await FacebookComment.find({}).sort({_id: -1}).skip(position).limit(1)
         return posts[0];
     }
 
     async getFacebookCommentCount(): Promise<number>{
-        return await this.FacebookComment.countDocuments({})
+        return await FacebookComment.countDocuments({})
     }
 
     async createOrUpdateFacebookProfile(profile:{
@@ -141,14 +141,14 @@ export default class FacebookService extends Mongo {
         followerValue?: number
         likeValue?: number
     }){
-        let data = await this.FacebookProfile.findOne({profileId: profile.profileId})
+        let data = await FacebookProfile.findOne({profileId: profile.profileId})
         if(data){
             data.name = profile.name?profile.name:data.name
             data.followerValue = profile.followerValue?profile.followerValue:data.followerValue
             data.likeValue = profile.likeValue?profile.likeValue:data.likeValue
             await data.save()
         }else{
-            await this.FacebookProfile.create({
+            await FacebookProfile.create({
                 profileId: profile.profileId,
                 name: profile.name,
                 followerValue: profile.followerValue?profile.followerValue:null,
@@ -159,7 +159,7 @@ export default class FacebookService extends Mongo {
 
     async getAllFacebookProfile(){
         try{
-            let datas = await this.FacebookProfile.find({})
+            let datas = await FacebookProfile.find({})
             return [datas, null]
         }catch(err){
             return [null, err]

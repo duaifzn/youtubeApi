@@ -1,8 +1,7 @@
-import Mongo from '../models/_index';
-export default class YoutubeService extends Mongo {
-    constructor(){
-        super()
-    }
+import { Youtube } from "../models/youtube";
+import { YoutubeChannelId } from "../models/youtubeChannelId";
+import { YoutubeComment } from "../models/youtubeComment";
+export default class YoutubeService {
     
     async createVideo(video: {
         videoId: string,
@@ -14,7 +13,7 @@ export default class YoutubeService extends Mongo {
         channel: string,
         webSite: string }){
             try{
-                let data = await this.Youtube.findOne({videoId: video.videoId})
+                let data = await Youtube.findOne({videoId: video.videoId})
                 if(data){
                     data.videoId = video.videoId
                     data.href = video.href
@@ -27,7 +26,7 @@ export default class YoutubeService extends Mongo {
                     await data.save()
                 }
                 else{
-                    await this.Youtube.create({
+                    await Youtube.create({
                         href: video.href,
                         publishedAt: video.publishedAt,
                         desc: video.desc,
@@ -53,7 +52,7 @@ export default class YoutubeService extends Mongo {
         publishedAt: Date,
     }){
         try{
-            let data = await this.YoutubeComment.findOne({commentId: comment.commentId})
+            let data = await YoutubeComment.findOne({commentId: comment.commentId})
             if(data){
                 data.videoId = comment.videoId
                 data.commentId = comment.commentId
@@ -65,7 +64,7 @@ export default class YoutubeService extends Mongo {
                 await data.save()
             }
             else{
-                await this.YoutubeComment.create({
+                await YoutubeComment.create({
                     videoId: comment.videoId,
                     commentId: comment.commentId,
                     parentId: comment.parentId,
@@ -84,9 +83,9 @@ export default class YoutubeService extends Mongo {
 
     async createChannelId(channelId: string){
         try{
-            let data = await this.YoutubeChannelId.findOne({channelId: channelId})
+            let data = await YoutubeChannelId.findOne({channelId: channelId})
             if(!data){
-                data = await this.YoutubeChannelId.create({
+                data = await YoutubeChannelId.create({
                     channelId: channelId
                 })
             }  
@@ -98,7 +97,7 @@ export default class YoutubeService extends Mongo {
 
     async getChannelIds(){
         try{
-            let channelIds = await this.YoutubeChannelId.find({})
+            let channelIds = await YoutubeChannelId.find({})
             return channelIds.map(channelId =>{
                 return channelId.channelId
             })

@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "dev": "NODE_ENV=dev ts-node src/fbCronjob.ts",
+    "dev": "NODE_ENV=dev ts-node src/server.ts",
     "start:server": "tsc && NODE_ENV=prod node dist/server.js",
     "start:fb": "tsc && NODE_ENV=prod node dist/fbCronjob.js",
     "start:ig": "tsc && NODE_ENV=prod node dist/igCronjob.js",
@@ -24,13 +24,19 @@
     "typescript": "^4.3.2"
   },
   "dependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/cookie-parser": "^1.4.2",
+    "@types/jsonwebtoken": "^8.5.5",
     "@types/sequelize": "^4.28.10",
     "axios": "^0.21.1",
+    "bcrypt": "^5.0.1",
     "cheerio": "*",
+    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.13",
     "mysql2": "^2.3.0",
     "node-cron": "^3.0.0",

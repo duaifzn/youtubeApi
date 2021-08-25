@@ -1,4 +1,4 @@
-import { Schema, Document } from "mongoose";
+import { Schema, Document, model } from "mongoose";
 
 export interface IInstagramComment extends Document{
     commentId: string
@@ -37,3 +37,5 @@ export const instagramCommentSchema = new Schema({
         type: String, require: true
     },
 },{ timestamps: true, collection: 'instagramComment'})
+
+export const InstagramComment = model<IInstagramComment>('InstagramComment', instagramCommentSchema)

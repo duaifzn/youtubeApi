@@ -14,10 +14,10 @@ export const dev = {
         'http://localhost:3000',
     ],
     mongoDb: {
-        mongoUri: 'mongodb://0.0.0.0:27018/rt',
+        mongoUri: 'mongodb://localhost:27020/social',
         authSource: 'admin',
-        user: 'eagle',
-        pass: 'eagle-eye',
+        user: 'root',
+        pass: 'root',
     },
     wordpressDb: {
         username: "root",
@@ -26,6 +26,10 @@ export const dev = {
         host: "127.0.0.1",
         port: 3313,
         dialect: "mysql"
+    },
+    jwt: {
+        secret: 'jwtSecret',
+        expiresIn: '7d'
     }
     
 }

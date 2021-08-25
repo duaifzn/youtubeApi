@@ -1,14 +1,14 @@
-import Mongo from "../models/_index"
-export default class InstagramService extends Mongo {
-    constructor(){
-        super()
-    }
+import { InstagramProfile } from '../models/instagramProfile';
+import { InstagramComment } from "../models/instagramComment";
+import { InstagramPost } from "../models/instagramPost";
+import { InstagramUserName } from "../models/instagramUserName";
+export default class InstagramService {
 
     async createInstagramUserName(userName: string){
         try{
-            let data = await this.InstagramUserName.findOne({userName: userName})
+            let data = await InstagramUserName.findOne({userName: userName})
             if(!data){
-                data = await this.InstagramUserName.create({
+                data = await InstagramUserName.create({
                     userName: userName
                 })
             }
@@ -19,7 +19,7 @@ export default class InstagramService extends Mongo {
     }
 
     async getInstagramUserNames(): Promise<any[]>{
-        let data = await this.InstagramUserName.find({})
+        let data = await InstagramUserName.find({})
         return data.map(d =>d.userName)
     }
 
@@ -31,7 +31,7 @@ export default class InstagramService extends Mongo {
         followingValue: number
         pictureUrl?: string
     }){
-        let data = await this.InstagramProfile.findOne({userId: profile.userId})
+        let data = await InstagramProfile.findOne({userId: profile.userId})
         if(data){
             data.userName = profile.userName
             data.fullName = profile.fullName
@@ -40,7 +40,7 @@ export default class InstagramService extends Mongo {
             data.pictureUrl = profile.pictureUrl? profile.pictureUrl:data.pictureUrl
             await data.save()
         }else{
-            await this.InstagramProfile.create({
+            await InstagramProfile.create({
                 userId: profile.userId,
                 userName: profile.userName,
                 fullName: profile.fullName,
@@ -52,7 +52,7 @@ export default class InstagramService extends Mongo {
     }
     
     async getInstagramIds(){
-        let data = await this.InstagramProfile.find({})
+        let data = await InstagramProfile.find({})
         return data.map(d => d.userId)
     }
 
@@ -65,7 +65,7 @@ export default class InstagramService extends Mongo {
         content?: string
         pictureUrl?: string
     }){
-        let data = await this.InstagramPost.findOne({postId: post.postId, ownerId: post.ownerId})
+        let data = await InstagramPost.findOne({postId: post.postId, ownerId: post.ownerId})
         if(data){
             data.shortCode = post.shortCode?post.shortCode:data.shortCode
             data.like = post.like?post.like:data.like
@@ -73,7 +73,7 @@ export default class InstagramService extends Mongo {
             data.content = post.content?post.content:data.content
             data.pictureUrl = post.pictureUrl?post.pictureUrl:data.pictureUrl
         }else{
-            await this.InstagramPost.create({
+            await InstagramPost.create({
                 postId: post.postId,
                 ownerId: post.ownerId,
                 shortCode: post.shortCode,
@@ -86,7 +86,7 @@ export default class InstagramService extends Mongo {
     }
 
     async getIGPostIdAndShortcode(){
-        let data = await this.InstagramPost.find({})
+        let data = await InstagramPost.find({})
         return data.map(d =>{
             return{
                 postId: d.postId,
@@ -106,7 +106,7 @@ export default class InstagramService extends Mongo {
         commenterPicture?: string
         content: string
     }){
-        let data = await this.InstagramComment.findOne({commentId: comment.commentId})
+        let data = await InstagramComment.findOne({commentId: comment.commentId})
         if(data){
             data.commentId = comment.commentId
             data.postId = comment.postId
@@ -117,7 +117,7 @@ export default class InstagramService extends Mongo {
             data.content = comment.content
             await data.save()
         }else{
-            await this.InstagramComment.create({
+            await InstagramComment.create({
                 commentId: comment.commentId,
                 postId: comment.postId,
                 ownerId: comment.ownerId,

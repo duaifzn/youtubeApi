@@ -1,4 +1,4 @@
-import { Schema, Document } from "mongoose";
+import { Schema, Document, model } from "mongoose";
 
 export interface IInstagramPost extends Document{
     postId: string
@@ -33,3 +33,5 @@ export const instagramPostSchema = new Schema({
         type: String, require: false, default: null
     }
 },{ timestamps: true, collection: 'instagramPost'})
+
+export const InstagramPost = model<IInstagramPost>('InstagramPost', instagramPostSchema)
