@@ -6,7 +6,7 @@ export default class FbToWordpressSchedule extends FbToWordpress {
         super()
     }
     async runFbToWordpressSchedules(){
-        cron.schedule('20 * * * *', async () =>{
+        cron.schedule('0 12 * * *', async () =>{
             await super.allFBToWordpressDb()
         })
     }
