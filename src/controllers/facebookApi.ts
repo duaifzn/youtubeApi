@@ -10,11 +10,12 @@ const headless = config.puppeteer.headless
 export default class FacebookApi extends FacebookService{
     page: puppeteer.Page
     browser: puppeteer.Browser
-
+    phone: puppeteer.Device
     constructor(){
         super();
         this.page = null
         this.browser = null
+        this.phone = puppeteer.devices['iPhone 11']
     }
     async login(){
         try{
@@ -30,6 +31,7 @@ export default class FacebookApi extends FacebookService{
             args: ['--no-sandbox', '--disable-setuid-sandbox'],
           })
         const page = await browser.newPage()
+        await page.emulate(this.phone)
         await page.goto('https://zh-tw.facebook.com/')
         await page.waitForSelector('#email')
         await page.type('#email', fbEmail, {delay: 10})
@@ -49,6 +51,7 @@ export default class FacebookApi extends FacebookService{
             args: ['--no-sandbox', '--disable-setuid-sandbox'],
           })
         const page = await browser.newPage()
+        await page.emulate(this.phone)
         await page.setCookie(...JSON.parse(cookies))
         await page.goto('https://m.facebook.com/')
         this.page = page;
@@ -110,6 +113,9 @@ export default class FacebookApi extends FacebookService{
                     return null
                 }
                 let style = img.getAttribute('style')
+                if(!style){
+                    return null
+                }
                 let originImgUrl = style.slice(style.indexOf("('")+2, style.indexOf("')"))
                 let imgUrl = originImgUrl.replace(/\s/g,'').replace(/\\/g, '\\u00')
                 return eval("'" + imgUrl + "'")
