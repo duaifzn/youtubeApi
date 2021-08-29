@@ -121,8 +121,7 @@ export default class FacebookApi extends FacebookService{
                 return eval("'" + imgUrl + "'")
             })
 
-            let titleOption = detail.articleBody || detail.description
-            let title = titleOption?titleOption:null
+            let title = detail.articleBody || detail.description || null
             let imgUrl = detail.image?detail.image[0].contentUrl:imageUrlFromStyle
             let commentCount = detail.commentCount?detail.commentCount:null
             let likeCount = null
