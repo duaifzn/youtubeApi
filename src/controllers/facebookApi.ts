@@ -21,7 +21,7 @@ export default class FacebookApi extends FacebookService{
         try{
             await this.loginCookies()
         }catch(err){
-            console.error('loginCookies error')
+            console.error(err)
             await this.loginEmail()
         }
     }
@@ -32,11 +32,11 @@ export default class FacebookApi extends FacebookService{
           })
         const page = await browser.newPage()
         await page.emulate(this.phone)
-        await page.goto('https://zh-tw.facebook.com/')
-        await page.waitForSelector('#email')
-        await page.type('#email', fbEmail, {delay: 10})
-        await page.waitForSelector('#pass')
-        await page.type('#pass', fbPassword, {delay: 10})
+        await page.goto('https://m.facebook.com/')
+        await page.waitForSelector('#m_login_email')
+        await page.type('#m_login_email', fbEmail, {delay: 10})
+        await page.waitForSelector('#m_login_password')
+        await page.type('#m_login_password', fbPassword, {delay: 10})
         await page.click('button[name="login"]');
         await page.waitForTimeout(5000);
         let cookie = await page.cookies();
@@ -49,14 +49,19 @@ export default class FacebookApi extends FacebookService{
         const browser = await puppeteer.launch({
             headless: headless,
             args: ['--no-sandbox', '--disable-setuid-sandbox'],
-          })
-        const page = await browser.newPage()
-        await page.emulate(this.phone)
-        await page.setCookie(...JSON.parse(cookies))
-        await page.goto('https://m.facebook.com/')
-        this.page = page;
-        this.browser = browser;
-       
+        })
+        try{
+            const page = await browser.newPage()
+            await page.emulate(this.phone)
+            await page.setCookie(...JSON.parse(cookies))
+            await page.goto('https://m.facebook.com/')
+            await page.waitForSelector('button[data-sigil="messenger_icon"]', {timeout: 3000})
+            this.page = page;
+            this.browser = browser;
+        }catch(err){
+            await browser.close()
+            throw new Error('login with cookies fail.')
+        }
     }
     async getPostIds(){
         let facebookIds = await super.getFacebookIds()
