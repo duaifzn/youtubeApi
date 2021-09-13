@@ -5,11 +5,12 @@
   "main": "app.js",
   "scripts": {
     "dev": "NODE_ENV=dev ts-node src/server.ts",
-    "start:server": "tsc && NODE_ENV=prod node dist/server.js",
+    "start:server": "tsc && npm run seed:prod && NODE_ENV=prod node dist/server.js",
     "start:fb": "tsc && NODE_ENV=prod node dist/fbCronjob.js",
     "start:ig": "tsc && NODE_ENV=prod node dist/igCronjob.js",
     "start:yt": "tsc && NODE_ENV=prod node dist/ytCronjob.js",
-    "seed:env": "NODE_ENV=dev ts-node src/seeders/*.ts"
+    "seed:prod": "NODE_ENV=prod node dist/seeders/_index.js",
+    "seed:dev": "NODE_ENV=dev ts-node src/seeders/_index.ts"
   },
   "keywords": [],
   "author": "",
