@@ -15,7 +15,7 @@ export default class FacebookApi extends FacebookService{
         super();
         this.page = null
         this.browser = null
-        this.phone = puppeteer.devices['iPhone 11']
+        this.phone = puppeteer.devices['Galaxy S III']
     }
     async login(){
         try{
@@ -55,7 +55,7 @@ export default class FacebookApi extends FacebookService{
             await page.emulate(this.phone)
             await page.setCookie(...JSON.parse(cookies))
             await page.goto('https://m.facebook.com/')
-            await page.waitForSelector('button[data-sigil="messenger_icon"]', {timeout: 3000})
+            await page.waitForSelector('div[data-sigil="messenger_icon"]', {timeout: 3000})
             this.page = page;
             this.browser = browser;
         }catch(err){
@@ -127,7 +127,7 @@ export default class FacebookApi extends FacebookService{
             })
 
             let title = detail.articleBody || detail.description || null
-            let imgUrl = detail.image?detail.image[0].contentUrl:imageUrlFromStyle
+            let imgUrl = detail.image?detail.image.contentUrl:imageUrlFromStyle
             let commentCount = detail.commentCount?detail.commentCount:null
             let likeCount = null
             let shareCount = null

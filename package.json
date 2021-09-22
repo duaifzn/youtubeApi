@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "dev": "NODE_ENV=dev ts-node src/server.ts",
+    "dev": "NODE_ENV=dev ts-node src/fbCronjob.ts",
     "start:server": "tsc && npm run seed:prod && NODE_ENV=prod node dist/server.js",
     "start:fb": "tsc && NODE_ENV=prod node dist/fbCronjob.js",
     "start:ig": "tsc && NODE_ENV=prod node dist/igCronjob.js",
