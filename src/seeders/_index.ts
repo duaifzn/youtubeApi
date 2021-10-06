@@ -25,6 +25,7 @@ const mongoDb = config.mongoDb;
             await youtubeIdSeed()
             process.exit(0)
         }else if(process.env.NODE_ENV == 'prod'){
+            await facebookIdSeed();
             await userSeed();
             process.exit(0)
         }
