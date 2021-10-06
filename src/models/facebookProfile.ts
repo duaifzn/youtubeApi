@@ -6,6 +6,7 @@ export interface IFacebookProfile extends Document {
     followerValue: number
     likeValue: number
     backgroundImgUrl: string
+    profileImgUrl: string
 }
 
 export const facebookProfileSchema = new Schema({
@@ -23,7 +24,10 @@ export const facebookProfileSchema = new Schema({
     },
     backgroundImgUrl: {
         type: String, require: false, default: null
-    }
+    },
+    profileImgUrl: {
+        type: String, require: false, default: null
+    },
 },{ timestamps: true, collection: 'facebookProfile'})
 
 export const FacebookProfile = model<IFacebookProfile>('FacebookProfile', facebookProfileSchema)

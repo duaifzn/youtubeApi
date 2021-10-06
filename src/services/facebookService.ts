@@ -141,6 +141,7 @@ export default class FacebookService {
         followerValue?: number
         likeValue?: number
         backgroundImgUrl?: string
+        profileImgUrl?: string
     }){
         let data = await FacebookProfile.findOne({profileId: profile.profileId})
         if(data){
@@ -148,6 +149,7 @@ export default class FacebookService {
             data.followerValue = profile.followerValue?profile.followerValue:data.followerValue
             data.likeValue = profile.likeValue?profile.likeValue:data.likeValue
             data.backgroundImgUrl = profile.backgroundImgUrl?profile.backgroundImgUrl:data.backgroundImgUrl
+            data.profileImgUrl = profile.profileImgUrl?profile.profileImgUrl:data.profileImgUrl
             await data.save()
         }else{
             await FacebookProfile.create({
@@ -155,7 +157,8 @@ export default class FacebookService {
                 name: profile.name,
                 followerValue: profile.followerValue?profile.followerValue:null,
                 likeValue: profile.likeValue?profile.likeValue:null,
-                backgroundImgUrl: profile.backgroundImgUrl?profile.backgroundImgUrl:null
+                backgroundImgUrl: profile.backgroundImgUrl?profile.backgroundImgUrl:null,
+                profileImgUrl: profile.profileImgUrl?profile.profileImgUrl:null
             })
         }
     }

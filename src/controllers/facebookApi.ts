@@ -127,6 +127,7 @@ export default class FacebookApi extends FacebookService{
             })
 
             let title = detail.articleBody || detail.description || null
+            let profileImgUrl = detail.author?detail.author.image:null
             let imgUrl = detail.image?detail.image.contentUrl:imageUrlFromStyle
             let commentCount = detail.commentCount?detail.commentCount:null
             let likeCount = null
@@ -148,6 +149,9 @@ export default class FacebookApi extends FacebookService{
             //write data to db
             if(followCount){
                 await this.updateProfileFollowerValue(facebookPostAndOwnerId.ownerId, followCount)
+            }
+            if(profileImgUrl){
+                await this.updateProfileImgUrl(facebookPostAndOwnerId.ownerId, profileImgUrl)
             }
             await super.createOrUpdateFacebookPost({
                 postId: facebookPostAndOwnerId.postId,
@@ -237,6 +241,12 @@ export default class FacebookApi extends FacebookService{
         await super.createOrUpdateFacebookProfile({
             profileId: profileId,
             followerValue: followerValue,
+        })
+    }
+    async updateProfileImgUrl(profileId: string, profileImgUrl: string){
+        await super.createOrUpdateFacebookProfile({
+            profileId: profileId,
+            profileImgUrl: profileImgUrl,
         })
     }
     async browserClose(){
