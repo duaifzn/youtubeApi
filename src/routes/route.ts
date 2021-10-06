@@ -22,6 +22,11 @@ router.get('/', authenticateJwtToken, (req, res) =>{
     res.render('index')
 })
 
+router.get('/allGroupDetail', async (req, res) =>{
+    const [datas, err] = await facebookService.getAllFacebookProfile()
+    res.json(datas)
+})
+
 router.post('/youtube', authenticateJwtToken, async (req, res) =>{
     let [data, err] = await youtubeService.createChannelId(req.body.channelId)
     if(err) {
