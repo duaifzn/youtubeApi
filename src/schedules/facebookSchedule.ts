@@ -3,28 +3,28 @@ import FacebookApi from '../controllers/facebookApi'
 
 export default class FacebookSchedule extends FacebookApi{
     async runGetPostIdsSchedule(){
-        cron.schedule('0 11 * * *', async () =>{
+        cron.schedule('0 9 * * *', async () =>{
             await super.login()
             await super.getPostIds()
             await super.browserClose()
         })
     }
     async runGetPostCommentSchedule(){
-        cron.schedule('10 11 * * *', async () =>{
+        cron.schedule('10 9 * * *', async () =>{
             await super.login()
             await super.getPostComment()
             await super.browserClose()
         })
     }
     async runGetPostDetailSchedule(){
-        cron.schedule('20 11 * * *', async () =>{
+        cron.schedule('20 9 * * *', async () =>{
             await super.login()
             await super.getPostDetail()
             await super.browserClose()
         })
     }
     async runGetProfileDetailSchedule(){
-        cron.schedule('25 15 * * *', async () =>{
+        cron.schedule('25 9 * * *', async () =>{
             await super.login()
             await super.getProfileDetail()
             await super.browserClose()
