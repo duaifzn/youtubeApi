@@ -24,7 +24,7 @@ export default class FacebookSchedule extends FacebookApi{
         })
     }
     async runGetProfileDetailSchedule(){
-        cron.schedule('30 11 * * *', async () =>{
+        cron.schedule('25 15 * * *', async () =>{
             await super.login()
             await super.getProfileDetail()
             await super.browserClose()
