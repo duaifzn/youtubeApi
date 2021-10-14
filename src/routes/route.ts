@@ -3,11 +3,13 @@ import YoutubeService from '../services/youtubeService'
 import FacebookService from '../services/facebookService'
 import InstagramService from '../services/instagramService'
 import UserController from '../controllers/userController'
+import KeywordGroup from '../controllers/keywordGroup'
 import { authenticateJwtToken } from '../middlewares/auth'
 const youtubeService = new YoutubeService()
 const facebookService = new FacebookService()
 const instagramService = new InstagramService()
 const userController = new UserController()
+const keywordGroup = new KeywordGroup()
 const router = express.Router()
 
 router.get('/login', (req, res) =>{
@@ -20,6 +22,11 @@ router.post('/signup', userController.signUp)
 
 router.get('/', authenticateJwtToken, (req, res) =>{
     res.render('index')
+})
+
+router.post('/addOneCategoryKeywordGroup', authenticateJwtToken, async (req, res) =>{
+    const { categoryName, keywords } = req.body
+    await keywordGroup.addOneCategoryKeywordGroup(categoryName, keywords)
 })
 
 router.get('/allGroupDetail', async (req, res) =>{

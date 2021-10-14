@@ -4,8 +4,8 @@ export const dev = {
         headless: false,
     },
     facebook: {
-        email: 'duaifzn@gmail.com',
-        password: 'QAZwsx1234',
+        email: 'rachel.forman.96@bk.ru',
+        password: '2XO7ZlIGwXV',
     },
     instagram: {
         sessionId: '13371201014%3AHR0DY0KxykP3L4%3A21'

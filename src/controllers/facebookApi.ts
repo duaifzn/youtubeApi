@@ -218,13 +218,16 @@ export default class FacebookApi extends FacebookService{
         let facebookIds = await super.getFacebookIds()
         for(let facebookId of facebookIds){
             await this.page.goto(`https://m.facebook.com/${facebookId}`)
+            await this.page.waitForSelector('i[data-sigil="cover-photo orientation-resizable"]')
+            await this.page.waitForSelector('meta[name="description"]')
             let [name, backgroundImgUrl, likeValue] = await this.page.evaluate(() =>{
                 let name = document.querySelector('title').textContent
                 if(name.includes(' - 首頁')) {
                     name = name.replace(' - 首頁', '')
                 }
                 let backgroundImg = document.querySelector('i[data-sigil="cover-photo orientation-resizable"]').getAttribute('style')
-                let backgroundImgUrl = backgroundImg.slice(backgroundImg.indexOf('"'), backgroundImg.lastIndexOf('"'))
+                let backgroundImgUrl = backgroundImg.slice(backgroundImg.indexOf("'")+1, backgroundImg.lastIndexOf("'"))
+                
                 let description = document.querySelector('meta[name="description"]').getAttribute('content')
                 let likeValue = description.split('。')[1].split('·')[0].match(/\d/g).join('')
                 return [name, backgroundImgUrl, likeValue]

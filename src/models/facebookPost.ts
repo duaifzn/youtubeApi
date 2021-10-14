@@ -8,7 +8,9 @@ export interface IFacebookPost extends Document{
     like: number,
     share: number,
     comment: number,
-    wpPostId: number, 
+    wpPostId: number,
+    categoryIds: string[], 
+    keywords: string[],
 }
 
 export const facebookPostSchema = new Schema({
@@ -35,7 +37,13 @@ export const facebookPostSchema = new Schema({
     },
     wpPostId:{
         type: Number, require: false, default: null
-    }
+    },
+    categoryIds:{
+        type: [String], require: false, default: null
+    },
+    keywords:{
+        type: [String], require: false, default: null
+    },
 },{ timestamps: true, collection: 'facebookPost' })
 
 export const FacebookPost = model<IFacebookPost>('FacebookPost', facebookPostSchema)
